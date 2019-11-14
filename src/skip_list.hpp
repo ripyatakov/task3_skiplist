@@ -75,10 +75,47 @@ SkipList<Value, Key, numLevels>::SkipList(double probability)
 }
 
 template<class Value, class Key, int numLevels>
-void SkipList<Value, Key, numLevels>::insert(const Value &val, const Key &key) {
-    SkipList::Node current = this->getPreHead();
-
+void SkipList<Value, Key, numLevels>::insert(const Value &val, const Key &key)
+{
+    int maxLevel = GetMaxLevel(this->_probability,numLevels-1);
+    SkipList::Node* current = this->getPreHead();
+    Node* prehead = this->getPreHead();
+    Node* newObj = new Node(key,val);
+    newObj->levelHighest = maxLevel;
+    for (int i = numLevels-1; i > 0; --i)
+    {
+        while(current->nextJump[i] != prehead && current->nextJump[i]->key < key)
+            current = current->nextJump[i];
+        //Если текущий уровень поиска <= maxуровню до которого необходимо вставлять элемент, то мы нашли место для вставки
+        //a = current.nextJump[i]
+        //current.nextJump[i] --> newObj.nextJump[i] --> a.nextJump[i]
+        if (i <= maxLevel)
+        {
+            Node* a = current->nextJump[i];
+            current->nextJump[i] = newObj;
+            newObj->nextJump[i] = a;
+        }
+    }
+    //Теперь надо вставить элемент на самом "плотном уровне"
+    while(current->next != prehead && current->next->key < key)
+        current = current->next;
+    Node* a = current->next;
+    current->next = newObj;
+    newObj->next = a;
 }
 
+template<class Value, class Key, int numLevels>
+void SkipList<Value, Key, numLevels>::removeNext(SkipList::Node *nodeBefore) {
+    
+}
+
+//Возвращаем максимальный уровень для элемента, который хотим вставить
+int GetMaxLevel(double p, int maxlvl)
+{
+    int answ = -1;
+    while (rand() % 100 < p * 100 && answ < maxlvl)
+        answ++;
+    return answ;
+}
 
 // TODO: !!! One need to implement all declared methods !!!
