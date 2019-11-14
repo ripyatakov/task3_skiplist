@@ -111,7 +111,7 @@ public:
 
     /// \brief Insert a new element into your list.
     ///
-    /// Think very hard how will you guarantee thatnew element will be
+    /// Think very hard how will you guarantee that new element will be
     /// included in sparse levels correctly!
     ///
     /// Make different test. Check border cases - empty list, end of the list,
