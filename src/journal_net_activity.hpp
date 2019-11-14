@@ -80,5 +80,21 @@ void JournalNetActivity<numLevels>::outputSuspiciousActivities(
         const TimeStamp& timeTo,
         std::ostream& out) const
 {
-    // TODO: Implement this method!
+    if (timeFrom > timeTo)
+        throw std::invalid_argument("timeFrom > timeTo!!!");
+
+    NodeSkipList<NetActivity, TimeStamp, numLevels>* activity = _journal.findLastLessThan(timeFrom);
+    if (!activity )
+    {
+        out << "";
+        return;
+    }
+    while (activity->next != _journal.getPreHead() && activity->next->key <= timeTo)
+    {
+        activity = activity->next;
+        if (activity->value.host == hostSuspicious)
+        {
+            out << activity->key << " " + activity->value.user + " " + activity->value.host << "\n";
+        }
+    }
 }
