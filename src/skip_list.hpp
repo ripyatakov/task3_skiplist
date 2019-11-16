@@ -75,8 +75,7 @@ SkipList<Value, Key, numLevels>::SkipList(double probability)
 }
 
 template<class Value, class Key, int numLevels>
-void SkipList<Value, Key, numLevels>::insert(const Value &val, const Key &key)
-{
+void SkipList<Value, Key, numLevels>::insert(const Value &val, const Key &key){
 
     int maxLevel = -1;
     while (rand() % 100 < _probability * 100 && maxLevel < numLevels-1)
@@ -86,15 +85,13 @@ void SkipList<Value, Key, numLevels>::insert(const Value &val, const Key &key)
     Node* prehead = this->getPreHead();
     Node* newObj = new Node(key,val);
     newObj->levelHighest = maxLevel;
-    for (int i = numLevels-1; i >= 0; --i)
-    {
+    for (int i = numLevels-1; i >= 0; --i){
         while(current->nextJump[i] != prehead && current->nextJump[i]->key < key)
             current = current->nextJump[i];
         //Если текущий уровень поиска <= maxуровню до которого необходимо вставлять элемент, то мы нашли место для вставки
         //a = current.nextJump[i]
         //current.nextJump[i] --> newObj.nextJump[i] --> a.nextJump[i]
-        if (i <= maxLevel)
-        {
+        if (i <= maxLevel){
             Node* a = current->nextJump[i];
             current->nextJump[i] = newObj;
             newObj->nextJump[i] = a;
@@ -120,21 +117,18 @@ void SkipList<Value, Key, numLevels>::removeNext(SkipList::Node *nodeBefore)
     Node* target = nodeBefore->next;
     Node* prehead  = this->getPreHead();
 
-    for (int i = numLevels-1; i >= 0; --i)
-    {
+    for (int i = numLevels-1; i >= 0; --i){
         //ищем предыдущий элемент перед таргетом
         while(current->nextJump[i] != prehead && current->nextJump[i]->key < target->key)
             current = current->nextJump[i];
         Node* hlp = current;
 
-        if (hlp->nextJump[i] != prehead)
-        {
+        if (hlp->nextJump[i] != prehead){
             while (hlp->nextJump[i] != prehead && hlp->nextJump[i] != target)
                 hlp = hlp->nextJump[i];
         }
 
-        if (hlp->nextJump[i] == target)
-        {
+        if (hlp->nextJump[i] == target){
             hlp->nextJump[i] = target->nextJump[i];
         }
     }
@@ -143,16 +137,14 @@ void SkipList<Value, Key, numLevels>::removeNext(SkipList::Node *nodeBefore)
 }
 template<class Value, class Key, int numLevels>
 typename SkipList<Value, Key, numLevels>::Node*
-SkipList<Value, Key, numLevels>::findLastLessThan(const Key &key) const
-{
+SkipList<Value, Key, numLevels>::findLastLessThan(const Key &key) const{
     if (this->getPreHead()->next == this->getPreHead() || this->getPreHead()->next->key > key)
         return this->getPreHead();
 
     Node* current = this->getPreHead();
     Node* prehead = this->getPreHead();
 
-    for (int i = numLevels - 1; i >= 0 ; --i)
-    {
+    for (int i = numLevels - 1; i >= 0 ; --i){
         while(current->nextJump[i] != prehead && current->nextJump[i]->key < key)
             current = current->nextJump[i];
     }
@@ -163,23 +155,15 @@ SkipList<Value, Key, numLevels>::findLastLessThan(const Key &key) const
 
 template<class Value, class Key, int numLevels>
 typename SkipList<Value, Key, numLevels>::Node*
-SkipList<Value, Key, numLevels>::findFirst(const Key &key) const
-{
+SkipList<Value, Key, numLevels>::findFirst(const Key &key) const{
     NodeSkipList<Value,Key, numLevels>* cur = this->findLastLessThan(key);
     while (cur->next != this->getPreHead() && cur->next->key < key)
         cur = cur->next;
     if (cur->next == this->getPreHead() || cur->next->key != key)
         return nullptr;
     return cur->next;
-
 }
 
 template<class Value, class Key, int numLevels>
-SkipList<Value, Key, numLevels>::~SkipList()
-{
-
+SkipList<Value, Key, numLevels>::~SkipList(){
 }
-
-
-
-// TODO: !!! One need to implement all declared methods !!!
