@@ -17,6 +17,8 @@
 //=============================================================================
 
 
+#include "ordered_list.h"
+
 template <class Value, class Key, class Node>
 OrderedList<Value, Key, Node>::OrderedList()
 {
@@ -102,6 +104,12 @@ template <class Value, class Key, class Node>
 Node* OrderedList<Value, Key, Node>::getPreHead() const
 {
     return _preHead;
+}
+
+template<class Value, class Key, class Node>
+OrderedList<Value, Key, Node>::~OrderedList()
+{
+
 }
 
 //-----------------------------------------------------------------------------
